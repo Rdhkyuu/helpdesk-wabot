@@ -28,8 +28,35 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ngirim Pegawai</title>
+        <link rel="stylesheet" href="fontawesome-free-6.3.0-web/css/all.min.css">
+        <link rel="stylesheet" href="style2.css">
     </head>
-    <body>
+    <body style="background: #e1e2e2;">
+        <div class="sidebar">
+        <div class="sidebar-brand">
+          <h2> Helpdesk wabot </h2>
+        </div>
+  
+        <div class="sidebar-menu">
+          <ul>
+            <li>
+              <a href="#"> <i class="fa-solid fa-house"></i> Dashboard </a>
+            </li>
+            <li>
+              <a href="#"> <i class="fa-solid fa-user"></i> User </a>
+            </li>
+            <li>
+              <a href="#"> <i class="fa-solid fa-ticket"></i> Kode Tiket </a>
+            </li>
+            <li>
+              <a href="#"> <i class="fa-solid fa-gear"></i> Setting </a>
+            </li>
+            <li>
+              <a href="#" class="logout"> <i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+            </li>
+          </ul>
+        </div>
+        </div>
         <form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
             <input type="hidden" name="kode_tiket" value="<?= $data['kode_tiket']; ?>">
             <input type="hidden" name="nip" value="<?= $nip; ?>">
