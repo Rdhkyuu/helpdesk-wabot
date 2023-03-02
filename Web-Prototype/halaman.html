@@ -5,9 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Laporan Helpdesk ...</title>
+    <link rel="stylesheet" href="fontawesome-free-6.3.0-web/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
   </head>
-  <body>
-    <h2>Laporan</h2>
+  <body style="background: #e1e2e2;">
+    <div class="sidebar">
+
+      <div class="sidebar-brand">
+        <h2> Helpdesk wabot </h2>
+      </div>
+
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="#"> <i class="fa-solid fa-house"></i> Dashboard </a>
+          </li>
+          <li>
+            <a href="#"> <i class="fa-solid fa-user"></i> User </a>
+          </li>
+          <li>
+            <a href="#"> <i class="fa-solid fa-ticket"></i> Kode Tiket </a>
+          </li>
+          <li>
+            <a href="#"> <i class="fa-solid fa-gear"></i> Setting </a>
+          </li>
+          <li>
+            <a href="#" class="logout"> <i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <h2>Laporan</h2>
     <label for="filterStatus">Filter:</label>
     <select name="filterStatus" id="filterStatus">
       <option value="">Tampilkan Semua</option>
@@ -15,7 +45,9 @@
       <option value="In Progress">In Progress</option>
       <option value="Done">Done</option>
     </select>
-    <table border="1">
+    <table class="tabel">
+      <thead>
+      <tbody>
       <tr>
         <th>Kode_Tiket</th>
         <th>Tanggal</th>
@@ -26,6 +58,28 @@
         <th>StatusLaporan</th>
         <th>Petugas yang ingin ditugaskan</th>
         <th>Aksi</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>TIX-010139B1</td>
+        <td>Selasa, 07 February 2023</td>
+        <td>Riku</td>
+        <td>59910210</td>
+        <td>6282122783902@c.us</td>
+        <td>Ngetes aja</td>
+        <td>Pending</td>
+        <td>
+          <select name="" class="pilihanPegawai">
+            <option value="">Silahkan pilih pegawai</option>
+            <option value="21212">Sukri</option>
+          </select>
+        </td>
+        <td>
+          <a href="#">
+            <button>Hapus Laporan</button>
+          </a>
+          <button class="kirim" data-kode-tiket="">Tambah Pegawai</button>
+        </td>
       </tr>
       <tr>
         <td>TIX-010139B1</td>
@@ -48,6 +102,30 @@
           <button class="kirim" data-kode-tiket="">Tambah Pegawai</button>
         </td>
       </tr>
+      <tr>
+        <td>TIX-010139B1</td>
+        <td>Selasa, 07 February 2023</td>
+        <td>Riku</td>
+        <td>59910210</td>
+        <td>6282122783902@c.us</td>
+        <td>Ngetes aja</td>
+        <td>Pending</td>
+        <td>
+          <select name="" class="pilihanPegawai">
+            <option value="">Silahkan pilih pegawai</option>
+            <option value="21212">Sukri</option>
+          </select>
+        </td>
+        <td>
+          <a href="#">
+            <button>Hapus Laporan</button>
+          </a>
+          <button class="kirim" data-kode-tiket="">Tambah Pegawai</button>
+        </td>
+      </tr>
+    </tbody>
     </table>
+  </div>
+
   </body>
 </html>
