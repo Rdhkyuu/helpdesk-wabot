@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    width: 260px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #272726;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.180);
+}
+
+.sidebar-brand {
+    padding: 35px 38px 30px 23px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.sidebar-menu ul a {
+    display: block;
+    line-height: 70px;
+    font-size: 15px;
+    color: white;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    transition: .5s;
+    letter-spacing: 1px;
+}
+
+.sidebar-menu ul li:hover a {
+    padding-left: 48px;
+}
+
+.sidebar-menu ul a i{
+    margin-right: 16px;
+}
+
+.sidebar-menu .logout {
+    position: absolute;
+    bottom: 0;
+}
+
+form {
+    margin-left: 295px;
+    width: 1020px;
+    padding: 20px;
+    margin-top: 35px;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+form h2 {
+    padding-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+form input {
+    display: block;
+    border: 2px solid #ccc;
+    width: 95%;
+    padding: 10px;
+    margin: 10px 0 0 10px;
+    border-radius: 5px;
+}
+
+form label {
+    font-size: 14px;
+    padding: 10px;
+    margin: auto;
+    text-transform: uppercase;
+}
+
+form .kirim {
+    margin-left: 13px;
+}
+
+form h4 {
+    padding-top: 30px;
+}
+
+form button {
+    background: #555;
+    padding: 10px 15px;
+    margin-top: 10px;
+    color: #fff;
+    border-radius: 5px;
+    margin-right: 10px;
+    border: none;
+}
+
+form button:hover {
+    opacity: .8;
+}

@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    width: 260px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #272726;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.180);
+}
+
+.sidebar-brand {
+    padding: 35px 38px 30px 23px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.sidebar-menu ul a {
+    display: block;
+    line-height: 70px;
+    font-size: 15px;
+    color: white;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    transition: .5s;
+    letter-spacing: 1px;
+}
+
+.sidebar-menu ul li:hover a {
+    padding-left: 48px;
+}
+
+.sidebar-menu ul a i{
+    margin-right: 16px;
+}
+
+.sidebar-menu .logout {
+    position: absolute;
+    bottom: 0;
+}
+
+/* main-content */
+.main-content {
+    margin-left: 295px;
+    width: 1050px;
+    padding: 20px;
+    margin-top: 35px;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.main-content h2 {
+    padding-bottom: 20px;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+table {
+    border-collapse: collapse;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.160);
+    margin: 25px 0;
+    text-align: center;
+    table-layout: auto;
+    width: 1480px;
+}
+
+table thead {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.160);
+}
+
+table tbody {
+    overflow-x: scroll;
+}
+
+table th {
+    padding: 18px 10px;
+    background-color: #272726;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+table td {
+    padding: 12px 10px;
+    font-size: 14px;
+}
+
+table tr:nth-child(odd) {
+    background-color:#d3d2d2;
+}
+
+table tr:nth-child(even) {
+    background-color:#f1f0f0;
+}
