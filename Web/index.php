@@ -21,13 +21,13 @@
       <div class="sidebar-menu">
         <ul>
           <li>
-            <a href="#"> <i class="fa-solid fa-house"></i> Dashboard </a>
+            <a href="index.php"> <i class="fa-solid fa-house"></i> Dashboard</a>
           </li>
           <li>
-            <a href="#"> <i class="fa-solid fa-user"></i> User </a>
+            <a href="pegawai.php"> <i class="fa-solid fa-user"></i> Pegawai </a>
           </li>
           <li>
-            <a href="#"> <i class="fa-solid fa-ticket"></i> Kode Tiket </a>
+            <a href="rating.php"> <i class="fa-solid fa-ticket"></i> Rating Tiket </a>
           </li>
           <li>
             <a href="#"> <i class="fa-solid fa-gear"></i> Setting </a>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="main-content">
-        <h2>Laporan</h2>
+        <h2>Dashboard Laporan</h2>
         <label for="filterStatus">Filter:</label>
     <select name="filterStatus" id="filterStatus">
         <option value="">Tampilkan Semua</option>
@@ -76,6 +76,7 @@
             <td><?= $data['aduan'] ?></td>
             <td><?= $data['statusLaporan'] ?></td>
             <td>
+              <?php if($data['statusLaporan'] === 'Pending') : ?>
                 <select name="" class="pilihanPegawai">
                     <option value="">Silahkan pilih pegawai</option>
                     <?php
@@ -87,14 +88,17 @@
                     </option>
                     <?php endwhile; ?>
                 </select>
+                <?php endif ?>
             </td>
             <td>
+              <?php if($data['statusLaporan'] === 'Pending') : ?>
+              <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>">Tambah Pegawai</button>
+              <?php endif ?>
                 <a href="hapusLaporan.php?kode_tiket=<?= $data['kode_tiket'];?>">
                     <button>Hapus Laporan</button>
                 </a>
-                <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>">Tambah Pegawai</button>
-            </td>
-        </tr>
+              </td>
+            </tr>
             <?php
             //  endif; 
             ?>
@@ -108,6 +112,7 @@
 
         tombolTambah.forEach((tombolTambah, index) => {
             tombolTambah.addEventListener('click', function(e) {
+              console.log(index);
                     if (!pilihPegawai[index].value) {
                         e.preventDefault();
                         alert("Silahkan pilih pegawai terlebih dahulu");
