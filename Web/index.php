@@ -45,8 +45,6 @@
 
       <div class="table_header">
       <h2>Laporan</h2>
-    <div class="main-content">
-        <h2>Dashboard Laporan</h2>
         <label for="filterStatus">Filter:</label>
           <select name="filterStatus" id="filterStatus">
             <option value="">Tampilkan Semua</option>
@@ -112,8 +110,6 @@
                 <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>"> <i class="fa-solid fa-plus"></i> </button>
             </td>
         </tr>
-              </td>
-            </tr>
             <?php
             //  endif; 
             ?>
