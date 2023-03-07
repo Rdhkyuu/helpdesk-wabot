@@ -41,11 +41,15 @@ client.on("ready", () => {
   // nomorTuju[6] = "6281549140599@c.us";
   const text = "Rikyuu Siap dijalankan!";
   for (let i = 0; i < nomorTuju.length; i++) {
-    client.sendMessage(nomorTuju[i], text);
     client.sendMessage(
       nomorTuju[i],
-      "Command yang tersedia \n/input\n/close\n/cek\n/rate\n\nCobai pang prototype bot, cobai semua commandnya"
+      `Command yang tersedia:
+      /input
+      /close
+      /cek
+      /rate`
     );
+    client.sendMessage(nomorTuju[i], text);
   }
 });
 
@@ -156,7 +160,7 @@ client.on("message", async (message) => {
       );
     } else {
       await message.reply(
-        "Maaf ada yang salah! Pastikan diisi sesuai dengan template"
+        "Maaf ada yang salah! Pastikan diisi sesuai dengan template. Silahkan ulang lagi dengan mengetik commandnya kembali"
       );
     }
   }
@@ -327,7 +331,9 @@ client.on("message", async (message) => {
         }
       );
     } else {
-      await message.reply("Ada yang salah! Silahkan perhatikan inputan anda!");
+      await message.reply(
+        "Ada yang salah! Silahkan perhatikan inputan anda! Ketik command dari awal lagi untuk memulai"
+      );
     }
   }
 
@@ -376,106 +382,90 @@ client.on("message", async (message) => {
 
     console.log(konfirmasi);
     if (template.test(konfirmasi)) {
-      let teleponUser = "+" + message.from;
+      let teleponUser = message.from;
       connection.query(
         "SELECT * FROM aduan WHERE noTelpon = ?",
         [teleponUser],
         async (error, results) => {
           if (error) throw error;
           else if (results.length === 0) {
-            await message.reply("Tidak ada data!");
+            await message.reply("Kamu tidak memiliki tiket untuk di rate!");
           }
         }
       );
+
       let isiText = konfirmasi.split("#");
       let isiTiket = isiText[0];
       let angkaRating = isiText[1];
       let tanggapanRating = isiText[2];
 
       connection.query(
-        "SELECT * FROM pegawaiditugaskan WHERE kode_tiket = ?",
+        "SELECT * FROM aduan WHERE kode_tiket = ?",
         [isiTiket],
         async (error, results) => {
           if (error) throw error;
           else if (results.length === 0) {
             await client.sendMessage(
               message.from,
-              `Kode tiket ' *${isiTiket}* ' tidak ada! Atau Kode tiket ini masih dalam tahap Pending!`
+              `Kode tiket ' *${isiTiket}* ' tidak ada!`
             );
-          } else if (
-            !results[0].nilai_laporan == 0 ||
-            !results[0].tanggapan == ""
-          ) {
-            await client.sendMessage(
-              message.from,
-              `' *${isiTiket}* ' sudah dirating! dengan nilai ' *${results[0].nilai_laporan}* ' dan tanggapan ' *${results[0].tanggapan}* '`
-            );
-          } else if (results[0].status_ticketLapor == "In Progress") {
-            await client.sendMessage(
-              message.from,
-              `' *${isiTiket}* ' masih dalam tahap ' *${results[0].status_ticketLapor}* '! Tidak bisa dikasih rating!`
+          } else if (results[0].noTelpon !== teleponUser) {
+            await message.reply("Kamu Mengakses Tiket yang bukan punya kamu!");
+          } else if (results[0].statusLaporan === "Pending") {
+            await message.reply(
+              `Tiket yang ingin kamu rating (*${isiTiket}*) masih dalam tahap *Pending* `
             );
           } else {
             connection.query(
-              "UPDATE pegawaiditugaskan SET nilai_laporan = ?, tanggapan = ? WHERE kode_tiket = ?",
-              [angkaRating, tanggapanRating, isiTiket]
+              "SELECT * FROM pegawaiditugaskan WHERE kode_tiket = ?",
+              [isiTiket],
+              async (error, results) => {
+                if (error) throw error;
+                else if (
+                  !results[0].nilai_laporan == 0 ||
+                  !results[0].tanggapan == ""
+                ) {
+                  await client.sendMessage(
+                    message.from,
+                    `' *${isiTiket}* ' sudah dirating! dengan nilai ' *${results[0].nilai_laporan}* ' dan tanggapan ' *${results[0].tanggapan}* '`
+                  );
+                } else if (results[0].status_ticketLapor == "In Progress") {
+                  await client.sendMessage(
+                    message.from,
+                    `' *${isiTiket}* ' masih dalam tahap ' *${results[0].status_ticketLapor}* '! Tidak bisa dikasih rating!`
+                  );
+                } else {
+                  connection.query(
+                    "UPDATE pegawaiditugaskan SET nilai_laporan = ?, tanggapan = ? WHERE kode_tiket = ?",
+                    [angkaRating, tanggapanRating, isiTiket]
+                  );
+                  if (angkaRating <= 2) {
+                    await client.sendMessage(
+                      message.from,
+                      `' *${isiTiket}* ' baru saja kamu rating! dengan nilai ' *${angkaRating}* ' dan tanggapan ' *${tanggapanRating}* '! Kami meminta maaf apabila layanan kami tidak sesuai ekspetasi karena anda memberi kami rating rendah! Terimakasih telah memakai layanan kami!`
+                    );
+                  } else {
+                    await client.sendMessage(
+                      message.from,
+                      `' *${isiTiket}* ' baru saja kamu rating! dengan nilai ' *${angkaRating}* ' dan tanggapan ' *${tanggapanRating}* '! Kami sangat berterimakasih karena anda memberi rating yang baik! Terimakasih telah memakai layanan kami!`
+                    );
+                  }
+                }
+              }
             );
-            if (angkaRating <= 2) {
-              await client.sendMessage(
-                message.from,
-                `' *${isiTiket}* ' baru saja kamu rating! dengan nilai ' *${angkaRating}* ' dan tanggapan ' *${tanggapanRating}* '! Kami meminta maaf apabila layanan kami tidak sesuai ekspetasi karena anda memberi kami rating rendah! Terimakasih telah memakai layanan kami!`
-              );
-            } else {
-              await client.sendMessage(
-                message.from,
-                `' *${isiTiket}* ' baru saja kamu rating! dengan nilai ' *${angkaRating}* ' dan tanggapan ' *${tanggapanRating}* '! Kami sangat berterimakasih karena anda memberi rating yang baik! Terimakasih telah memakai layanan kami!`
-              );
-            }
           }
         }
       );
     } else {
-      await message.reply("Inputan salah! Mohon perhatikan inputan anda!");
+      await message.reply(
+        "Inputan salah! Mohon perhatikan inputan anda! Silahkan ketikan command dari awal untuk memulai"
+      );
     }
   }
-
-  //     connection.query(
-  //         'SELECT * FROM infowa WHERE id = ?',
-  //         [cari_siswa],
-  //         function(error, results, fields) {
-  //             if (error) {
-  //               console.error(error);
-  //             } else {
-  //               if (results.length=== 0) {
-  //                 console.log("Data tidak ada");
-  //                 message.reply("Data tidak ada");
-  //               }
-  //               else {
-  //                 console.log("Data ditemukan: ");
-  //                 console.log(results[0].id);
-  //                 console.log(results[0].isiwa);
-
-  //                 message.reply(results[0].isiwa);
-  //               }
-  //             }
-  //           }
-  //       );
 });
 
 //Proses Dimana klient disconnect dari Whatsapp-web
 client.on("disconnected", (reason) => {
-  const nomorTuju = [];
-  nomorTuju[0] = "6282122783902@c.us";
-  nomorTuju[1] = "6285750917162@c.us";
-  nomorTuju[2] = "6283162365253@c.us";
-  nomorTuju[3] = "62895700510221@c.us";
-  nomorTuju[4] = "6283863458459@c.us";
-  nomorTuju[5] = "6289691686721@c.us";
-  nomorTuju[6] = "6281549140599@c.us";
-  const text = "Rikyuu telah tidur! Terimakasih!";
-  for (let i = 0; i < nomorTuju.length; i++) {
-    client.sendMessage(nomorTuju[i], text);
-  }
   console.log("disconnect Whatsapp-bot", reason);
 });
 
