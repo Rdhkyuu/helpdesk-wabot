@@ -31,7 +31,7 @@ client.on("qr", (qr) => {
 //Proses Dimana Whatsapp-web.js Siap digunakan
 client.on("ready", () => {
   console.log("Udah Siap!");
-  const lokasigambar = "/Media/awokawok.gif";
+  const lokasigambar = "D:\\xampp\\htdocs\\HelpDesk_waBot\\Media\\awokawok.gif";
   const kirimMedia = MessageMedia.fromFilePath(lokasigambar);
 
   const nomorTuju = [];
@@ -473,7 +473,7 @@ client.on("message", async (message) => {
 //Proses Dimana klient disconnect dari Whatsapp-web
 client.on("disconnected", (reason) => {
   console.log("disconnect Whatsapp-bot", reason);
-  const lokasigambar = "/Media/hayuk.gif";
+  const lokasigambar = "D:\\xampp\\htdocs\\HelpDesk_waBot\\Media\\hayuk.gif";
   const kirimMedia = MessageMedia.fromFilePath(lokasigambar);
   const nomorTuju = [];
   nomorTuju[0] = "6282122783902@c.us";
