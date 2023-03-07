@@ -1,7 +1,8 @@
 // Package yang di gunakan
-const { Client } = require("whatsapp-web.js");
+const { Client, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const mysql = require("mysql2");
+const fs = require("fs");
 
 // Database Section
 const connection = mysql.createConnection({
@@ -30,16 +31,18 @@ client.on("qr", (qr) => {
 //Proses Dimana Whatsapp-web.js Siap digunakan
 client.on("ready", () => {
   console.log("Udah Siap!");
+  const lokasigambar = "/Media/awokawok.gif";
+  const kirimMedia = MessageMedia.fromFilePath(lokasigambar);
 
   const nomorTuju = [];
   nomorTuju[0] = "6282122783902@c.us";
-  // nomorTuju[1] = "6285750917162@c.us";
-  // nomorTuju[2] = "6283162365253@c.us";
-  // nomorTuju[3] = "62895700510221@c.us";
-  // nomorTuju[4] = "6283863458459@c.us";
-  // nomorTuju[5] = "6289691686721@c.us";
-  // nomorTuju[6] = "6281549140599@c.us";
-  const text = "Rikyuu Siap dijalankan!";
+  nomorTuju[1] = "6285750917162@c.us";
+  nomorTuju[2] = "6283162365253@c.us";
+  nomorTuju[3] = "62895700510221@c.us";
+  nomorTuju[4] = "6283863458459@c.us";
+  nomorTuju[5] = "6289691686721@c.us";
+  nomorTuju[6] = "6281549140599@c.us";
+  nomorTuju[7] = "62882019288141@c.us";
   for (let i = 0; i < nomorTuju.length; i++) {
     client.sendMessage(
       nomorTuju[i],
@@ -49,7 +52,10 @@ client.on("ready", () => {
       /cek
       /rate`
     );
-    client.sendMessage(nomorTuju[i], text);
+    client.sendMessage(nomorTuju[i], "RikyuuZ siap dijalankan!");
+    client.sendMessage(nomorTuju[i], kirimMedia, {
+      caption: "AWOAKWKAWK IZIN ON!",
+    });
   }
 });
 
@@ -467,6 +473,31 @@ client.on("message", async (message) => {
 //Proses Dimana klient disconnect dari Whatsapp-web
 client.on("disconnected", (reason) => {
   console.log("disconnect Whatsapp-bot", reason);
+  const lokasigambar = "/Media/hayuk.gif";
+  const kirimMedia = MessageMedia.fromFilePath(lokasigambar);
+  const nomorTuju = [];
+  nomorTuju[0] = "6282122783902@c.us";
+  nomorTuju[1] = "6285750917162@c.us";
+  nomorTuju[2] = "6283162365253@c.us";
+  nomorTuju[3] = "62895700510221@c.us";
+  nomorTuju[4] = "6283863458459@c.us";
+  nomorTuju[5] = "6289691686721@c.us";
+  nomorTuju[6] = "6281549140599@c.us";
+  nomorTuju[7] = "62882019288141@c.us";
+  for (let i = 0; i < nomorTuju.length; i++) {
+    client
+      .sendMessage("6282122783902@c.us", kirimMedia, {
+        caption: "WKWKWKWKWKK IZIN OFF",
+      })
+      .then(() => {
+        console.log("Message sent before disconnecting");
+        client.destroy();
+      })
+      .catch((err) => {
+        console.error(`Error sending message: ${err}`);
+        client.destroy();
+      });
+  }
 });
 
 client.initialize();
