@@ -14,11 +14,16 @@
 </head> 
 
 <body style="background: #e1e2e2;">
-    <div class="sidebar">
 
-      <div class="sidebar-brand">
-        <h2> Helpdesk wabot </h2>
+    <nav class="navbar">
+      <div class="profile">
+        <h3> Dashboard </h3>
+        <img src="img/admin.jpg" alt="admin.jpg" class="profile_image">
+        <p class="profile_name"> Admin </p>
       </div>
+    </nav>
+
+    <div class="sidebar">
 
       <div class="sidebar-menu">
         <ul>
@@ -98,16 +103,15 @@
                     </option>
                     <?php endwhile; ?>
                 </select>
-                <?php endif ?>
+              <?php endif ?>
             </td>
             <td>
               <?php if($data['statusLaporan'] === 'Pending') : ?>
-              <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>">Tambah Pegawai</button>
+              <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>"> <i class="fa-solid fa-plus"></i> </button>
               <?php endif ?>
                 <a href="hapusLaporan.php?kode_tiket=<?= $data['kode_tiket'];?>">
                     <button class="hapus"> <i class="fa-solid fa-trash"></i> </button>
                 </a>
-                <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>"> <i class="fa-solid fa-plus"></i> </button>
             </td>
         </tr>
             <?php

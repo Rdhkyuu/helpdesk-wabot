@@ -9,6 +9,47 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* ---navbar--- */
+.navbar {
+    display: flex;
+    position: fixed;
+    align-items: center;
+    width: 100%;
+    height: 55px;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 2;
+    padding-left: 6rem;
+}
+
+.profile {
+    display: flex;
+    width: 32%;
+    max-width: 200px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile h3 {
+    font-size: 18px;
+    margin-left: 25px;
+}
+
+.profile_image {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-left: 1025px;
+}
+
+.profile_name {
+    font-size: 16px;
+    margin-left: 12px;
+}
+
+/* ---sidebar--- */
 .sidebar {
     position: fixed;
     width: 260px;
@@ -51,7 +92,7 @@
     bottom: 0;
 }
 
-/* table-content */
+/* ---table content--- */
 .main_table {
     margin-left: 290px;
     padding: 20px;
@@ -108,14 +149,14 @@ thead th {
 }
 
 table td {
-    padding: 0 95px 0 95px;
+    padding: 1px 120px 0 120px;
     font-size: 14px;
     text-align: center;
 }
 
 table, th, td {
     border-collapse: collapse;
-    padding: 16px;
+    padding: 50px;
 }
 
 table tr:nth-child(odd) {
@@ -126,24 +167,10 @@ table tr:nth-child(even) {
     background-color:#f1f0f0;
 }
 
-.filterStatus {
-    padding: 8px 0;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.filterStatus.Pending {
-    background-color: #86e49d;
-    color: #006b21;
-}
-
-.filterStatus.In Progress {
-    background-color: #d893a3;
-    color: #b30021;
-}
-
-.filterStatus.Done {
-    background-color: #ebc474;
+.status .Pending {
+    padding: 2px 4px;
+    background-color: #ff2f2f71;
+    color: #ff2828;
 }
 
 table .hapus {

@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    width: 260px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #272726;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.180);
+}
+
+.sidebar-brand {
+    padding: 35px 38px 30px 23px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.sidebar-menu ul a {
+    display: block;
+    line-height: 70px;
+    font-size: 15px;
+    color: white;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    transition: .5s;
+    letter-spacing: 1px;
+}
+
+.sidebar-menu ul li:hover a {
+    padding-left: 48px;
+}
+
+.sidebar-menu ul a i{
+    margin-right: 16px;
+}
+
+.sidebar-menu .logout {
+    position: absolute;
+    bottom: 0;
+}
+
+/* pegawai-style */
+.main_table {
+    margin-left: 290px;
+}
+
+.main_table .table1 {
+    padding: 20px;
+    margin-top: 31px;
+    width: 37vw;
+    height: 32vh;
+    background-color: #fff;
+    box-shadow: 0 8px 10px #0005;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.main_table .table2 {
+    padding: 20px;
+    width: 37vw;
+    height: 50vh;
+    background-color: #fff;
+    box-shadow: 0 8px 10px #0005;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.main_table h2 {
+    padding-bottom: 10px;
+    font-size: 21px;
+    font-weight: bold;
+}
