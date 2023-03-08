@@ -12,8 +12,10 @@
     <link rel="stylesheet" href="fontawesome-free-6.3.0-web/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head> 
+
 <body style="background: #e1e2e2;">
     <div class="sidebar">
+
       <div class="sidebar-brand">
         <h2> Helpdesk wabot </h2>
       </div>
@@ -38,18 +40,24 @@
         </ul>
       </div>
     </div>
-    <div class="main-content">
-        <h2>Dashboard Laporan</h2>
+
+    <main class="main_table">
+
+      <div class="table_header">
+      <h2>Laporan</h2>
         <label for="filterStatus">Filter:</label>
-    <select name="filterStatus" id="filterStatus">
-        <option value="">Tampilkan Semua</option>
-        <option value="Pending">Pending</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Done">Done</option>
-    </select>
-    <table class="tabel">
+          <select name="filterStatus" id="filterStatus">
+            <option value="">Tampilkan Semua</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+          </select>
+      </div>
+
+      <div class="table_body">
+      <table>
+
         <thead>
-        <tbody>
         <tr>
             <th>Kode_Tiket</th>
             <th>Tanggal</th>
@@ -62,6 +70,8 @@
             <th>Aksi</th>
         </tr>
         </thead>
+
+        <tbody>
         <?php
                 $sql = mysqli_query($koneksi,"SELECT * FROM aduan ORDER BY tanggal DESC ");
                 while ($data = mysqli_fetch_array($sql)) :    
@@ -95,17 +105,19 @@
               <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>">Tambah Pegawai</button>
               <?php endif ?>
                 <a href="hapusLaporan.php?kode_tiket=<?= $data['kode_tiket'];?>">
-                    <button>Hapus Laporan</button>
+                    <button class="hapus"> <i class="fa-solid fa-trash"></i> </button>
                 </a>
-              </td>
-            </tr>
+                <button class="kirim" data-kode-tiket="<?= $data['kode_tiket']; ?>"> <i class="fa-solid fa-plus"></i> </button>
+            </td>
+        </tr>
             <?php
             //  endif; 
             ?>
             <?php endwhile; ?>
          </tbody>
         </table>
-        <script>
+        </div>
+      <script>
         const selectFilter = document.querySelector('#filterStatus')
         const tombolTambah = document.querySelectorAll('.kirim')
         const pilihPegawai = document.querySelectorAll('.pilihanPegawai')
@@ -130,7 +142,7 @@
         // selectFilter.addEventListener('change', function() {
         //     let filterName = this.value;
         // })
-    </script>
-</div>
+      </script>
+    </main>
 </body>
 </html>
