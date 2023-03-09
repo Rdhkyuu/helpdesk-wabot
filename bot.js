@@ -51,20 +51,33 @@ client.on("qr", (qr) => {
 //Proses Dimana Whatsapp-web.js Siap digunakan
 client.on("ready", async () => {
   console.log("Udah Siap!");
-  const nomorTuju = [];
-  nomorTuju[0] = "6282122783902@c.us";
-  // nomorTuju[1] = "6285750917162@c.us";
-  // nomorTuju[2] = "6283162365253@c.us";
-  // nomorTuju[3] = "62895700510221@c.us";
-  // nomorTuju[4] = "6283863458459@c.us";
-  // nomorTuju[5] = "6289691686721@c.us";
-  // nomorTuju[6] = "6281549140599@c.us";
-  // nomorTuju[7] = "62882019288141@c.us";
+  const nomorTuju = [
+    "6282122783902@c.us",
+    "120363039787330454@g.us",
+    // "6285750917162@c.us",
+    // "6283162365253@c.us",
+    // "62895700510221@c.us",
+    // "6283863458459@c.us",
+    // "6289691686721@c.us",
+    // "6281549140599@c.us",
+    // "62882019288141@c.us",
+  ];
   const lokasiVideo = "D:\\xampp\\htdocs\\HelpDesk_waBot\\Media\\awokawok.mp4";
   const dataVideo = fs.readFileSync(lokasiVideo);
   const base64ImageData = dataVideo.toString("base64");
   const kirimMedia = new MessageMedia("video/mp4", base64ImageData);
   for (let i = 0; i < nomorTuju.length; i++) {
+    try {
+      await client.sendMessage(
+        nomorTuju[i],
+        `IZIN ONN BANG!!
+Silahkan ketikkan /help untuk mengetahui command apa saja yang ada!
+        `
+      );
+    } catch (err) {
+      console.error("ERROR MESSAGE: ", err);
+    }
+
     try {
       await client.sendMessage(nomorTuju[i], kirimMedia, {
         sendMediaAsSticker: true,
@@ -74,20 +87,6 @@ client.on("ready", async () => {
       console.log("GAMBAR KEKIRIM!");
     } catch (err) {
       console.error("ERROR GAMBAR: ", err);
-    }
-
-    try {
-      await client.sendMessage(
-        nomorTuju[i],
-        `IZIN ONN BANG!!
-Command yang tersedia:
-        /input
-        /close
-        /cek
-        /rate`
-      );
-    } catch (err) {
-      console.error("ERROR MESSAGE: ", err);
     }
   }
 });
@@ -120,25 +119,45 @@ client.on("message", async (message) => {
   hariIndo[6] = "Sabtu";
 
   // Nomor Tester
-  const nomorTuju = [];
-  nomorTuju[0] = "6282122783902@c.us";
-  // nomorTuju[1] = "6285750917162@c.us";
-  // nomorTuju[2] = "6283162365253@c.us";
-  // nomorTuju[3] = "62895700510221@c.us";
-  // nomorTuju[4] = "6283863458459@c.us";
-  // nomorTuju[5] = "6289691686721@c.us";
-  // nomorTuju[6] = "6281549140599@c.us";
-  // nomorTuju[7] = "62882019288141@c.us";
+  const nomorTuju = [
+    "6282122783902@c.us",
+    "120363039787330454@g.us",
+    // "6285750917162@c.us",
+    // "6283162365253@c.us",
+    // "62895700510221@c.us",
+    // "6283863458459@c.us",
+    // "6289691686721@c.us",
+    // "6281549140599@c.us",
+    // "62882019288141@c.us",
+  ];
+  // Mengambil Folder media
+  const lokasiMedia = "D:\\xampp\\htdocs\\HelpDesk_waBot\\Media\\";
+  const gambarKita = fs
+    .readFileSync(lokasiMedia + "4cb.jpg")
+    .toString("base64");
+  const kirimKita = new MessageMedia("image/jpg", gambarKita);
 
   // Mengambil Enum statusLaporan
   const statusLaporan = ["Pending", "In progress", "Done"][0];
   const nomorGuwe = "+6282122783902".substring(1) + "@c.us";
 
   // Command
+  const chat = await message.getChat();
 
-  // Mengecek apakah pesannya dari grup atau bukan
-  if (!message.fromMe) {
-    if (message.body.toLowerCase() === "/input") {
+  // Mengecek apakah pesannya dari client sendiri dan bukan dari grup
+  // Untuk Tugas Magang
+  if (!message.fromMe && !chat.isGroup) {
+    if (message.body.toLowerCase() === "/help") {
+      await message.reply(`Command yang tersedia saat ini: 
+*_Command Tugas(Tidak bisa dilakukan di group chat!)_*
+*/input*
+*/close*
+*/cek*
+*/rate*
+
+*_Command Random (Cuma bisa dilakukan di group khusus saat ini!)_*
+/everyone`);
+    } else if (message.body.toLowerCase() === "/input") {
       await client.sendMessage(message.from, "Nama#SKPD#Aduan");
       await message.reply(`Silahkan masukkan data seperti apa yang ada diatas.
 contoh: Riku#1234567#Ini cuma contoh!`);
@@ -503,7 +522,18 @@ contoh: TIX-???????#close`
       const base64ImageData = dataVideo.toString("base64");
       const kirimMedia = new MessageMedia("video/mp4", base64ImageData);
 
+      let senderName = "Tidak diketahui!";
+      const contact = await message.getContact();
+      if (contact) {
+        senderName = contact.name || contact.pushname || senderName;
+      }
+
       for (let i = 0; i < nomorTuju.length; i++) {
+        await client.sendMessage(
+          nomorTuju[i],
+          `IZIN OFF BANG!!
+        (Dishutdown oleh _${senderName}_)`
+        );
         await client
           .sendMessage(nomorTuju[i], kirimMedia, {
             sendMediaAsSticker: true,
@@ -517,8 +547,6 @@ contoh: TIX-???????#close`
           .catch((err) => {
             console.error("ERROR GAMBAR: ", err);
           });
-
-        await client.sendMessage(nomorTuju[i], `IZIN OFF BANG!!`);
       }
 
       setTimeout(() => {
@@ -532,6 +560,45 @@ contoh: TIX-???????#close`
       Kejadian ini akan kami laporkan dan mengeceknya lebih lanjut!`);
       console.log(`Ada yang mencoba command /off!
       Nomornya adalah: ${message.from}`);
+    }
+  } else if (
+    !message.fromMe &&
+    chat.isGroup &&
+    message.from === "120363039787330454@g.us"
+  ) {
+    const mentions = await message.getMentions();
+    for (let contact of mentions) {
+      message.reply(kirimKita, message.from, {
+        sendMediaAsSticker: true,
+        stickerAuthor: "XkyuuX",
+        stickerName: "jangan tag anjing",
+      });
+      message.reply("ADA APA BANG", message.from);
+      console.log(`Di mention sama ${contact.pushname}`);
+    }
+
+    if (message.body.toLowerCase() === "/help") {
+      await message.reply(`Command yang tersedia saat ini: 
+*_Command Tugas(Tidak bisa dilakukan di group chat!)_*
+*/input*
+*/close*
+*/cek*
+*/rate*
+
+*_Command Random(Cuman bisa dilakukan di group khusus saat ini!)_*
+*/everyone*`);
+    } else if (message.body.toLowerCase() === "/everyone") {
+      let text = "";
+      let mentions = [];
+
+      for (let participant of chat.participants) {
+        const contact = await client.getContactById(participant.id._serialized);
+
+        mentions.push(contact);
+        text += `@${participant.id.user} `;
+      }
+
+      await chat.sendMessage(text, { mentions });
     }
   }
 });
