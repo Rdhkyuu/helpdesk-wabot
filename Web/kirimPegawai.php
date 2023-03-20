@@ -31,32 +31,45 @@
         <link rel="stylesheet" href="fontawesome-free-6.3.0-web/css/all.min.css">
         <link rel="stylesheet" href="style2.css">
     </head>
-    <body style="background: #e1e2e2;">
-        <div class="sidebar">
-        <div class="sidebar-brand">
-          <h2> Helpdesk wabot </h2>
-        </div>
-  
-        <div class="sidebar-menu">
-          <ul>
-            <li>
-              <a href="#"> <i class="fa-solid fa-house"></i> Dashboard </a>
-            </li>
-            <li>
-              <a href="#"> <i class="fa-solid fa-user"></i> User </a>
-            </li>
-            <li>
-              <a href="#"> <i class="fa-solid fa-ticket"></i> Kode Tiket </a>
-            </li>
-            <li>
-              <a href="#"> <i class="fa-solid fa-gear"></i> Setting </a>
-            </li>
-            <li>
-              <a href="#" class="logout"> <i class="fa-solid fa-right-from-bracket"></i> Logout </a>
-            </li>
-          </ul>
-        </div>
-        </div>
+    <body>
+
+        <nav class="navbar">
+      <div class="profile">
+        <h3> Kirim </h3>
+        <!-- <img src="img/admin.jpg" alt="admin.jpg" class="profile_image"> -->
+      </div>
+    </nav>
+
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <a href="index.php"> Helpdesk wabot </a>
+      </div>
+      
+      <div class="sidebar-menu">
+        <ul>
+          <li class="menu-header"> main menu </li> 
+          <li>
+            <a href="index.php"> <i class="fa-solid fa-house"></i> <span> Dashboard </span> </a>
+          </li>
+          <li>
+            <a href="pegawai.php"> <i class="fa-solid fa-user"></i> <span> Pegawai </span> </a>
+          </li>
+          <li>
+            <a href="rating.php"> <i class="fa-solid fa-ticket"></i> <span> Rating Tiket </span> </a>
+          </li>
+          <li>
+            <a href="#"> <i class="fa-solid fa-gear"></i> <span> Setting </span> </a>
+          </li>
+        </ul>
+
+        <ul class="logout">
+          <li>
+            <a href="#"> <i class="fa-solid fa-right-from-bracket"></i> <span> Logout </span> </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
         <form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
             <input type="hidden" name="kode_tiket" value="<?= $data['kode_tiket']; ?>">
             <input type="hidden" name="nip" value="<?= $nip; ?>">
