@@ -93,7 +93,7 @@
           <div class="footer-col">
             <div class="col1">
               <h4> database </h4>
-              <a href="https://www.instagram.com/rdhkyu/"> Rikyu </a>
+              <a target="_blank" href="https://www.instagram.com/rdhkyu/"> Rikyu </a>
             </div>
           </div>
 
@@ -107,7 +107,7 @@
           <div class="footer-col">
             <div class="col3">
               <h4> design </h4>
-              <a href="https://www.instagram.com/rinn.ii_/"> Rina </a>
+              <a target="_blank" href="https://www.instagram.com/rinn.ii_/"> Rina </a>
             </div>
           </div>
 
