@@ -6,6 +6,7 @@ const axios = require("axios");
 const fs = require("fs");
 const request = require("request");
 const puppeteer = require("puppeteer-core");
+const rp = require("request-promise");
 
 const SESSION_FILE_PATH = "./session.json";
 let sessionData;
@@ -53,7 +54,7 @@ client.on("ready", async () => {
   console.log("Udah Siap!");
   const nomorTuju = [
     "6282122783902@c.us",
-    "120363039787330454@g.us",
+    // "120363039787330454@g.us",
     // "6285750917162@c.us",
     // "6283162365253@c.us",
     // "62895700510221@c.us",
@@ -92,6 +93,7 @@ Silahkan ketikkan /help untuk mengetahui command apa saja yang ada!
 });
 
 client.on("message", async (message) => {
+  const chat = await message.getChat();
   // Function untuk generate id random
   function tiketRandom(prefix) {
     let id = prefix.concat(
@@ -121,7 +123,7 @@ client.on("message", async (message) => {
   // Nomor Tester
   const nomorTuju = [
     "6282122783902@c.us",
-    "120363039787330454@g.us",
+    // "120363039787330454@g.us",
     // "6285750917162@c.us",
     // "6283162365253@c.us",
     // "62895700510221@c.us",
@@ -141,8 +143,21 @@ client.on("message", async (message) => {
   const statusLaporan = ["Pending", "In progress", "Done"][0];
   const nomorGuwe = "+6282122783902".substring(1) + "@c.us";
 
+  // Mentions
+  const phoneNumber = client.info.wid.user;
+  if (message.mentionedIds.includes(`${phoneNumber}@c.us`)) {
+    console.log(`You were mentioned in a message by ${message.from}`);
+
+    const chat = await message.getChat();
+    await chat.sendMessage("KENAPA BANG??");
+    await chat.sendMessage(kirimKita, {
+      sendMediaAsSticker: true,
+      stickerAuthor: "XkyuuX",
+      stickerName: "jangan tag anjing",
+    });
+  }
+
   // Command
-  const chat = await message.getChat();
 
   // Mengecek apakah pesannya dari client sendiri dan bukan dari grup
   // Untuk Tugas Magang
@@ -156,7 +171,8 @@ client.on("message", async (message) => {
 */rate*
 
 *_Command Random (Cuma bisa dilakukan di group khusus saat ini!)_*
-/everyone`);
+*@everyone*
+*/profile*`);
     } else if (message.body.toLowerCase() === "/input") {
       await client.sendMessage(message.from, "Nama#SKPD#Aduan");
       await message.reply(`Silahkan masukkan data seperti apa yang ada diatas.
@@ -566,17 +582,6 @@ contoh: TIX-???????#close`
     chat.isGroup &&
     message.from === "120363039787330454@g.us"
   ) {
-    const mentions = await message.getMentions();
-    for (let contact of mentions) {
-      message.reply(kirimKita, message.from, {
-        sendMediaAsSticker: true,
-        stickerAuthor: "XkyuuX",
-        stickerName: "jangan tag anjing",
-      });
-      message.reply("ADA APA BANG", message.from);
-      console.log(`Di mention sama ${contact.pushname}`);
-    }
-
     if (message.body.toLowerCase() === "/help") {
       await message.reply(`Command yang tersedia saat ini: 
 *_Command Tugas(Tidak bisa dilakukan di group chat!)_*
@@ -586,8 +591,9 @@ contoh: TIX-???????#close`
 */rate*
 
 *_Command Random(Cuman bisa dilakukan di group khusus saat ini!)_*
-*/everyone*`);
-    } else if (message.body.toLowerCase() === "/everyone") {
+*@everyone*
+*/profile*`);
+    } else if (message.body.toLowerCase() === "@everyone") {
       let text = "";
       let mentions = [];
 
@@ -599,6 +605,46 @@ contoh: TIX-???????#close`
       }
 
       await chat.sendMessage(text, { mentions });
+    } else if (message.body.toLowerCase().startsWith("/profile ")) {
+      try {
+        const mentions = await message.getMentions();
+        if (mentions.length > 0) {
+          const user = mentions[0].id._serialized;
+          const contact = await client.getContactById(user);
+          if (contact) {
+            try {
+              const profilePicUrl = await contact.getProfilePicUrl();
+              if (profilePicUrl) {
+                await client.sendMessage(message.from, profilePicUrl, {
+                  caption: "Ini masbro!",
+                  quotedMessageId: message.id._serialized,
+                });
+              } else {
+                const replyMessage = `${
+                  contact.name || contact.pushname || "Gaada nama"
+                } gaada profile picture`;
+                await message.reply(replyMessage);
+              }
+            } catch (error) {
+              console.log(error);
+              const replyMessage = `Ada error saat ingin mengakses kontak si ${
+                contact.name || contact.pushname || "Gaada nama"
+              } `;
+              await message.reply(replyMessage);
+            }
+          } else {
+            const replyMessage = `Gaada user itu!`;
+            await message.reply(replyMessage);
+          }
+        } else {
+          const replyMessage = `Silahkan tag user yang ingin diliat!`;
+          await message.reply(replyMessage);
+        }
+      } catch (error) {
+        console.log(error);
+        const replyMessage = `Ada error!`;
+        await message.reply(replyMessage);
+      }
     }
   }
 });
