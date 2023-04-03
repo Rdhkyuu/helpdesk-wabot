@@ -35,7 +35,7 @@ const client = new Client({
   puppeteer: {
     executablePath:
       "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    headless: true,
+    headless: false,
   },
   session: sessionData,
   authStrategy: new LocalAuth({
@@ -102,7 +102,8 @@ client.on("message", async (message) => {
     return id;
   }
   let prefixAwal = "TIX-";
-
+  const templateinput = /^INPUT+#[\w!?+\-.,\s]+#[\w!?+\-.,\s]+#[\w!?+\-.,\s]+$/;
+  let userData = {};
   // Generate Tanggal Secara Realtime
   const options = {
     year: "numeric",
@@ -173,67 +174,126 @@ client.on("message", async (message) => {
 *_Command Random (Cuma bisa dilakukan di group khusus saat ini!)_*
 *@everyone*
 */profile*`);
-    } else if (message.body.toLowerCase() === "/input") {
-      await client.sendMessage(message.from, "Nama#SKPD#Aduan");
-      await message.reply(`Silahkan masukkan data seperti apa yang ada diatas.
-contoh: Riku#1234567#Ini cuma contoh!`);
-      const template = /^[\w!?\s]+#[0-9]+#[\w!?+\-.,\s]+$/;
-      const konfirmasi = await new Promise((resolve) => {
-        client.once("message", async (reply) => {
-          if (reply.from === message.from && !reply.fromMe) {
-            resolve(reply.body);
+    } else if (templateinput.test(message.body)) {
+      console.log("INPUT MASUK!");
+      const isiText = message.body.split("#");
+      const isiTiket = tiketRandom(prefixAwal);
+      const nama = isiText[1];
+      const SKPD = isiText[2];
+      const aduan = isiText[3];
+      const tanggalHariIni =
+        hariIndo[indo.getDay()] +
+        ", " +
+        hariIni.toLocaleDateString("en-GB", options);
+      const telepon = message.from;
+      // Verifikasi untuk tidak ada orang typo
+      await client.sendMessage(
+        message.from,
+        `Anda mengakses input dengan memasukkan data sebagai berikut
+    *Nama*: *${nama}*
+    *SKPD*: *${SKPD}*
+    *Aduan*: *${aduan}*
+    Apakah data tersebut sudah benar? (Ya/Tidak)`
+      );
+      const balasanChat = async (balasan) => {
+        if (balasan.from === message.from && !balasan.fromMe) {
+          if (balasan.body.toLowerCase() === "ya") {
+            const querySQL =
+              "INSERT INTO aduan (kode_tiket, tanggal, nama, skpd, noTelpon, aduan, statusLaporan) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            const data = [
+              isiTiket,
+              tanggalHariIni,
+              nama,
+              SKPD,
+              telepon,
+              aduan,
+              statusLaporan,
+            ];
+
+            connection.query(querySQL, data, (error, results) => {
+              if (error) throw error;
+              console.log(
+                results.affectedRows + " data ditambahkan pada table aduan!"
+              );
+            });
+            // connection.query("SELECT * FROM aduan ORDER BY tanggal DESC LIMIT 1;", (error,results) => {
+            //   if (error) throw error;
+            //   console.log(results);
+            // })
+            await message.reply(
+              "Berhasil dimasukkan! Silahkan tunggu beberapa hari sampai pegawai kami mengkonfirmasi anda kembali!"
+            );
+            await message.reply(
+              `Kode tiketmu adalah ' *${isiTiket}* ', kamu bisa mengecek status tiketmu dengan /cek`
+            );
+          } else {
+            await message.reply("Command dibatalkan!");
           }
-        });
-      });
-      console.log(konfirmasi);
-      console.log(template.test(konfirmasi));
+        }
+        client.removeListener("message", balasanChat);
+      };
+      client.on("message", balasanChat);
+    }
+    //       await client.sendMessage(message.from, "Nama#SKPD#Aduan");
+    //       await message.reply(`Silahkan masukkan data seperti apa yang ada diatas.
+    // contoh: Riku#1234567#Ini cuma contoh!`);
+    //       const template = /^[\w!?\s]+#[0-9]+#[\w!?+\-.,\s]+$/;
+    // const konfirmasi = await new Promise((resolve) => {
+    //   client.once("message", async (reply) => {
+    //     if (reply.from === message.from && !reply.fromMe) {
+    //       resolve(reply.body);
+    //     }
+    //   });
+    // });
+    //       console.log(konfirmasi);
+    //       console.log(template.test(konfirmasi));
 
-      if (template.test(konfirmasi)) {
-        console.log(`${message.from} mengakses /input!`);
-        let isiText = konfirmasi.split("#");
-        let isiTiket = tiketRandom(prefixAwal);
-        let nama = isiText[0];
-        let SKPD = isiText[1];
-        let aduan = isiText[2];
-        let telepon = message.from;
-        const tanggalHariIni =
-          hariIndo[indo.getDay()] +
-          ", " +
-          hariIni.toLocaleDateString("en-GB", options);
-        const querySQL =
-          "INSERT INTO aduan (kode_tiket, tanggal, nama, skpd, noTelpon, aduan, statusLaporan) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        const data = [
-          isiTiket,
-          tanggalHariIni,
-          nama,
-          SKPD,
-          telepon,
-          aduan,
-          statusLaporan,
-        ];
+    //       if (template.test(konfirmasi)) {
+    //         console.log(`${message.from} mengakses /input!`);
+    //         let isiText = konfirmasi.split("#");
+    //         let isiTiket = tiketRandom(prefixAwal);
+    //         let nama = isiText[0];
+    //         let SKPD = isiText[1];
+    //         let aduan = isiText[2];
+    //         let telepon = message.from;
+    // const tanggalHariIni =
+    //   hariIndo[indo.getDay()] +
+    //   ", " +
+    //   hariIni.toLocaleDateString("en-GB", options);
+    //   const querySQL =
+    //     "INSERT INTO aduan (kode_tiket, tanggal, nama, skpd, noTelpon, aduan, statusLaporan) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    //   const data = [
+    //     isiTiket,
+    //     tanggalHariIni,
+    //     nama,
+    //     SKPD,
+    //     telepon,
+    //     aduan,
+    //     statusLaporan,
+    //   ];
 
-        connection.query(querySQL, data, (error, results) => {
-          if (error) throw error;
-          console.log(
-            results.affectedRows + " data ditambahkan pada table aduan!"
-          );
-        });
-        // connection.query("SELECT * FROM aduan ORDER BY tanggal DESC LIMIT 1;", (error,results) => {
-        //   if (error) throw error;
-        //   console.log(results);
-        // })
-        await message.reply(
-          "Berhasil dimasukkan! Silahkan tunggu beberapa hari sampai pegawai kami mengkonfirmasi anda kembali!"
-        );
-        await message.reply(
-          `Kode tiketmu adalah ' *${isiTiket}* ', kamu bisa mengecek status tiketmu dengan /cek`
-        );
-      } else {
-        await message.reply(
-          "Maaf ada yang salah! Pastikan diisi sesuai dengan template. Silahkan ulang lagi dengan mengetik commandnya kembali"
-        );
-      }
-    } else if (message.body.toLowerCase() === "/close") {
+    //   connection.query(querySQL, data, (error, results) => {
+    //     if (error) throw error;
+    //     console.log(
+    //       results.affectedRows + " data ditambahkan pada table aduan!"
+    //     );
+    //   });
+    //   // connection.query("SELECT * FROM aduan ORDER BY tanggal DESC LIMIT 1;", (error,results) => {
+    //   //   if (error) throw error;
+    //   //   console.log(results);
+    //   // })
+    //   await message.reply(
+    //     "Berhasil dimasukkan! Silahkan tunggu beberapa hari sampai pegawai kami mengkonfirmasi anda kembali!"
+    //   );
+    //   await message.reply(
+    //     `Kode tiketmu adalah ' *${isiTiket}* ', kamu bisa mengecek status tiketmu dengan /cek`
+    //   );
+    // } else {
+    //   await message.reply(
+    //     "Maaf ada yang salah! Pastikan diisi sesuai dengan template. Silahkan ulang lagi dengan mengetik commandnya kembali"
+    //   );
+    // }
+    else if (message.body.toLowerCase() === "/close") {
       await client.sendMessage(message.from, "kode_tiket#close");
       await client.sendMessage(
         message.from,
@@ -576,14 +636,13 @@ contoh: TIX-???????#close`
       Kejadian ini akan kami laporkan dan mengeceknya lebih lanjut!`);
       console.log(`Ada yang mencoba command /off!
       Nomornya adalah: ${message.from}`);
-    }
-  } else if (
-    !message.fromMe &&
-    chat.isGroup &&
-    message.from === "120363039787330454@g.us"
-  ) {
-    if (message.body.toLowerCase() === "/help") {
-      await message.reply(`Command yang tersedia saat ini: 
+    } else if (
+      !message.fromMe &&
+      chat.isGroup &&
+      message.from === "120363039787330454@g.us"
+    ) {
+      if (message.body.toLowerCase() === "/help") {
+        await message.reply(`Command yang tersedia saat ini: 
 *_Command Tugas(Tidak bisa dilakukan di group chat!)_*
 */input*
 */close*
@@ -593,57 +652,60 @@ contoh: TIX-???????#close`
 *_Command Random(Cuman bisa dilakukan di group khusus saat ini!)_*
 *@everyone*
 */profile*`);
-    } else if (message.body.toLowerCase() === "@everyone") {
-      let text = "";
-      let mentions = [];
+      } else if (message.body.toLowerCase() === "@everyone") {
+        let text = "";
+        let mentions = [];
 
-      for (let participant of chat.participants) {
-        const contact = await client.getContactById(participant.id._serialized);
+        for (let participant of chat.participants) {
+          const contact = await client.getContactById(
+            participant.id._serialized
+          );
 
-        mentions.push(contact);
-        text += `@${participant.id.user} `;
-      }
+          mentions.push(contact);
+          text += `@${participant.id.user} `;
+        }
 
-      await chat.sendMessage(text, { mentions });
-    } else if (message.body.toLowerCase().startsWith("/profile ")) {
-      try {
-        const mentions = await message.getMentions();
-        if (mentions.length > 0) {
-          const user = mentions[0].id._serialized;
-          const contact = await client.getContactById(user);
-          if (contact) {
-            try {
-              const profilePicUrl = await contact.getProfilePicUrl();
-              if (profilePicUrl) {
-                await client.sendMessage(message.from, profilePicUrl, {
-                  caption: "Ini masbro!",
-                  quotedMessageId: message.id._serialized,
-                });
-              } else {
-                const replyMessage = `${
+        await chat.sendMessage(text, { mentions });
+      } else if (message.body.toLowerCase().startsWith("/profile ")) {
+        try {
+          const mentions = await message.getMentions();
+          if (mentions.length > 0) {
+            const user = mentions[0].id._serialized;
+            const contact = await client.getContactById(user);
+            if (contact) {
+              try {
+                const profilePicUrl = await contact.getProfilePicUrl();
+                if (profilePicUrl) {
+                  await client.sendMessage(message.from, profilePicUrl, {
+                    caption: "Ini masbro!",
+                    quotedMessageId: message.id._serialized,
+                  });
+                } else {
+                  const replyMessage = `${
+                    contact.name || contact.pushname || "Gaada nama"
+                  } gaada profile picture`;
+                  await message.reply(replyMessage);
+                }
+              } catch (error) {
+                console.log(error);
+                const replyMessage = `Ada error saat ingin mengakses kontak si ${
                   contact.name || contact.pushname || "Gaada nama"
-                } gaada profile picture`;
+                } `;
                 await message.reply(replyMessage);
               }
-            } catch (error) {
-              console.log(error);
-              const replyMessage = `Ada error saat ingin mengakses kontak si ${
-                contact.name || contact.pushname || "Gaada nama"
-              } `;
+            } else {
+              const replyMessage = `Gaada user itu!`;
               await message.reply(replyMessage);
             }
           } else {
-            const replyMessage = `Gaada user itu!`;
+            const replyMessage = `Silahkan tag user yang ingin diliat!`;
             await message.reply(replyMessage);
           }
-        } else {
-          const replyMessage = `Silahkan tag user yang ingin diliat!`;
+        } catch (error) {
+          console.log(error);
+          const replyMessage = `Ada error!`;
           await message.reply(replyMessage);
         }
-      } catch (error) {
-        console.log(error);
-        const replyMessage = `Ada error!`;
-        await message.reply(replyMessage);
       }
     }
   }
