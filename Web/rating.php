@@ -71,7 +71,7 @@
             FROM pegawaiditugaskan p
             JOIN aduan a ON p.kode_tiket = a.kode_tiket");
             while ($data = mysqli_fetch_array($sql)) : 
-            if ($data['status_ticketLapor'] === 'Done') :
+            if ($data['nilai_laporan'] != 0 && $data['status_ticketLapor'] === "Done") :
         ?>   
         
         <tr>
