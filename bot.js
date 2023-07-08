@@ -41,7 +41,7 @@ const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "client-one",
   }),
-  ffmpegPath: "C:\\ffmpeg\\bin\\ffmpeg.exe",
+  ffmpegPath: "C:\\ffmpeg\\bin\\ffmpeg.exe", // Harus install ffmpeg dahulu
 });
 
 //Proses Masuk whatsappjs menggunakan qrcode yang akan di kirim oleh whatsapp-web.js
@@ -54,24 +54,26 @@ client.on("ready", async () => {
   console.log("Udah Siap!");
   const nomorTuju = [
     "6282122783902@c.us",
-    // "120363039787330454@g.us",
-    // "6285750917162@c.us",
-    // "6283162365253@c.us",
-    // "62895700510221@c.us",
-    // "6283863458459@c.us",
-    // "6289691686721@c.us",
-    // "6281549140599@c.us",
-    // "62882019288141@c.us",
+    "120363039787330454@g.us",
+    "6285750917162@c.us",
+    "6283162365253@c.us",
+    "62895700510221@c.us",
+    "6283863458459@c.us",
+    "6289691686721@c.us",
+    "6281549140599@c.us",
+    "62882019288141@c.us",
+    "6285751654103@c.us",
   ];
   const lokasiVideo = "D:\\xampp\\htdocs\\HelpDesk_waBot\\Media\\awokawok.mp4";
   const dataVideo = fs.readFileSync(lokasiVideo);
   const base64ImageData = dataVideo.toString("base64");
   const kirimMedia = new MessageMedia("video/mp4", base64ImageData);
+
   for (let i = 0; i < nomorTuju.length; i++) {
     try {
       await client.sendMessage(
         nomorTuju[i],
-        `IZIN ONN BANG!!
+        `IZIN ONN!!
 Silahkan ketikkan /help untuk mengetahui command apa saja yang ada!
         `
       );
@@ -81,7 +83,7 @@ Silahkan ketikkan /help untuk mengetahui command apa saja yang ada!
 
     try {
       await client.sendMessage(nomorTuju[i], kirimMedia, {
-        sendMediaAsSticker: true,
+        sendMediaAsSticker: true, // Kalau mati jadi video
         stickerAuthor: "XkyuuX",
         stickerName: `ISRAEL BABI`,
       });
@@ -104,6 +106,7 @@ client.on("message", async (message) => {
   let prefixAwal = "TIX-";
   const templateinput = /^INPUT+#[\w!?+\-.,\s]+#[\w!?+\-.,\s]+#[\w!?+\-.,\s]+$/;
   const templateclose = /^CLOSE+#[\w!?+\-.,\s]+$/;
+  const templatefclose = /^FCLOSE+#[\w!?+\-.,\s]+$/;
   const templaterate = /^RATE+#[\w\s!?\+\-]+#[1-5]+#[\w\s!?\+\-]+$/;
   let userData = {};
   // Generate Tanggal Secara Realtime
@@ -126,14 +129,15 @@ client.on("message", async (message) => {
   // Nomor Tester
   const nomorTuju = [
     "6282122783902@c.us",
-    // "120363039787330454@g.us",
-    // "6285750917162@c.us",
-    // "6283162365253@c.us",
-    // "62895700510221@c.us",
-    // "6283863458459@c.us",
-    // "6289691686721@c.us",
-    // "6281549140599@c.us",
-    // "62882019288141@c.us",
+    "120363039787330454@g.us",
+    "6285750917162@c.us",
+    "6283162365253@c.us",
+    "62895700510221@c.us",
+    "6283863458459@c.us",
+    "6289691686721@c.us",
+    "6281549140599@c.us",
+    "62882019288141@c.us",
+    "6285751654103@c.us",
   ];
   // Mengambil Folder media
   const lokasiMedia = "D:\\xampp\\htdocs\\HelpDesk_waBot\\Media\\";
@@ -167,6 +171,8 @@ client.on("message", async (message) => {
     if (message.body.toLowerCase() === "/help") {
       await message.reply(`Command yang tersedia saat ini: 
 *_Command Tugas(Tidak bisa dilakukan di group chat!)_*
+_Penulisan Format harus Huruf Kapital di Kalimat Pertama, seperti INPUT, CLOSE, dan RATE_
+
 *INPUT*
 _Contoh_: INPUT#nama#skpd#aduan
 *CLOSE*
@@ -216,7 +222,7 @@ _Contoh_: RATE#kode-tiket#1-5#tanggapan
       );
     } else if (templateclose.test(message.body)) {
       console.log(`${message.from} mengakses CLOSE#`);
-      if (message.from === nomorGuwe) {
+      if (message.from === nomorGuwe || message.from === "6285751654103@c.us") {
         let isiText = message.body.split("#");
         let kode_tiket = isiText[1].toUpperCase();
 
@@ -304,7 +310,105 @@ _Contoh_: RATE#kode-tiket#1-5#tanggapan
                     );
                     await client.sendMessage(
                       teleponUser,
-                      `Tiket anda ' *${kode_tiket}* ' telah ditutup! Dikerjakan oleh petugas ' *${nama} '. Mohon berikan tanggapan dengan mengetik RATE#kode-tiket#1-5#tanggapan !`
+                      `Tiket anda ' *${kode_tiket}* ' telah ditutup! Dikerjakan oleh petugas ' *${nama}* '. Mohon berikan tanggapan dengan mengetik RATE#kode-tiket#1-5#tanggapan !`
+                    );
+                  }
+                }
+              );
+            }
+          }
+        );
+      } else {
+        await message.reply(
+          "Hanya orang yang terauthorisasi untuk mengakses perintah ini! Kejadian ini akan kami tindak lebih lanjut!"
+        );
+        console.log(message.from);
+      }
+    } else if (templatefclose.test(message.body)) {
+      console.log(`${message.from} mengakses FCLOSE#`);
+      if (message.from === nomorGuwe || message.from === "6285751654103@c.us") {
+        let isiText = message.body.split("#");
+        let kode_tiket = isiText[1].toUpperCase();
+        connection.query(
+          "SELECT kode_tiket FROM aduan WHERE kode_tiket = ?;",
+          [kode_tiket],
+          async (error, results) => {
+            if (error) throw error;
+            else if (results.length === 0) {
+              await client.sendMessage(
+                message.from,
+                `Kode tiket ' *${kode_tiket}* ' tidak ada!`
+              );
+            } else if (results[0].kode_tiket === kode_tiket) {
+              connection.query(
+                "SELECT statusLaporan FROM aduan WHERE kode_tiket = ?",
+                [kode_tiket],
+                async (error, results) => {
+                  if (error) throw error;
+                  else if (results[0].statusLaporan === "Pending") {
+                    let nip;
+                    let nama;
+                    let teleponUser;
+                    await new Promise((resolve, reject) => {
+                      connection.query(
+                        "SELECT noTelpon FROM aduan WHERE kode_tiket = ?",
+                        [kode_tiket],
+                        (error, results) => {
+                          if (error) reject(error);
+                          teleponUser = results[0].noTelpon;
+                          resolve();
+                        }
+                      );
+                    });
+                    await new Promise((resolve, reject) => {
+                      connection.query(
+                        "SELECT nip,nama FROM pegawaiditugaskan WHERE kode_tiket = ?",
+                        [kode_tiket],
+                        (error, results) => {
+                          if (error) reject(error);
+                          nip = results[0].nip;
+                          nama = results[0].nama;
+                          resolve();
+                        }
+                      );
+                    });
+                    console.log(teleponUser);
+                    console.log(nip);
+                    console.log(nama);
+
+                    connection.query(
+                      "UPDATE aduan SET statusLaporan = ? WHERE kode_tiket = ?",
+                      ["Done", kode_tiket],
+                      (error, results) => {
+                        if (error) throw error;
+                        console.log(
+                          results.affectedRows + " table aduan dirubah!"
+                        );
+                      }
+                    );
+                    connection.query(
+                      "UPDATE pegawaiditugaskan SET status_ticketLapor = ? WHERE kode_tiket = ?",
+                      ["Done", kode_tiket],
+                      (error, results) => {
+                        if (error) throw error;
+                        console.log(
+                          results.affectedRows +
+                            " table pegawaiditugaskan dirubah!"
+                        );
+                      }
+                    );
+                    await client.sendMessage(
+                      message.from,
+                      `' *${kode_tiket}* ' yang dikerjakan oleh ' *${nama}* ' dengan nip ' *${nip}* ' telah ditutup! Terimakasih!'`
+                    );
+                    await client.sendMessage(
+                      teleponUser,
+                      `Tiket anda ' *${kode_tiket}* ' telah ditutup! Dikerjakan oleh petugas ' *${nama}* '. Mohon berikan tanggapan dengan mengetik RATE#kode-tiket#1-5#tanggapan !`
+                    );
+                  } else {
+                    await client.sendMessage(
+                      message.from,
+                      "Kode tiket tersebut tidak bisa diclose karena kemungkinan bukan dalam status laporan Pending!"
                     );
                   }
                 }
@@ -438,7 +542,7 @@ _Contoh_: RATE#kode-tiket#1-5#tanggapan
       for (let i = 0; i < nomorTuju.length; i++) {
         await client.sendMessage(
           nomorTuju[i],
-          `IZIN OFF BANG!!
+          `IZIN OFF!!
         (Dishutdown oleh _${senderName}_)`
         );
         await client
@@ -476,6 +580,8 @@ _Contoh_: RATE#kode-tiket#1-5#tanggapan
     if (message.body.toLowerCase() === "/help") {
       await message.reply(`Command yang tersedia saat ini: 
 *_Command Tugas(Tidak bisa dilakukan di group chat!)_*
+_Penulisan Format harus Huruf Kapital di Kalimat Pertama, seperti INPUT, CLOSE, dan RATE_
+
 *INPUT*
 _Contoh_: INPUT#nama#skpd#aduan
 *CLOSE* (Hanyar authorisasi yang bisa menggunakan perintah ini!)
